@@ -1,0 +1,105 @@
+# Servir contenidos de tipo text/plain o text/html usando la codificación UTF-8
+AddDefaultCharset utf-8
+
+# Forzar la codificación UTF-8 en varios tipos de archivos
+AddCharset utf-8 .atom .css .js .json .rss .vtt .xml
+
+#Impedir el acceso a los archivos y directorios ocultos
+RewriteCond %{SCRIPT_FILENAME} -d [OR]
+RewriteCond %{SCRIPT_FILENAME} -f
+RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/[0-9a-zA-Z_-]+$
+RewriteCond %{REQUEST_URI} !^/\.well-known/cpanel-dcv/[0-9a-zA-Z_-]+$
+RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
+RewriteRule "(^|/)\." - [F]
+
+#Impedir que se pueda acceder a archivos con contenidos sensibles
+<FilesMatch "(\.(bak|config|dist|fla|inc|ini|psd|sh|sql|swp)|~)$">
+    Order allow,deny
+    Deny from all
+    Satisfy All
+</FilesMatch>
+
+#Impedir que se pueda ver el listado de contenidos de un directorio
+Options All -Indexes
+
+#Mejorar el rendimiento/Comprimir archivos
+<IfModule mod_deflate.c>
+
+    # Forzar compresión también para las cabeceras malformadas
+    <IfModule mod_setenvif.c>
+        <IfModule mod_headers.c>
+            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+        </IfModule>
+    </IfModule>
+
+    # Comprimir los contenidos que sean de cualquiera de estos tipos
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE application/atom+xml \
+                                      application/javascript \
+                                      application/json \
+                                      application/rss+xml \
+                                      application/vnd.ms-fontobject \
+                                      application/x-font-ttf \
+                                      application/x-web-app-manifest+json \
+                                      application/xhtml+xml \
+                                      application/xml \
+                                      font/opentype \
+                                      image/svg+xml \
+                                      image/x-icon \
+                                      text/css \
+                                      text/html \
+                                      text/plain \
+                                      text/x-component \
+                                      text/xml
+    </IfModule>
+
+</IfModule>
+
+
+
+
+RewriteEngine on
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+Header always set Content-Security-Policy "upgrade-insecure-requests;"
+
+# htaccess custom error pages
+#ErrorDocument 400 /errors/
+#ErrorDocument 401 /errors/
+#ErrorDocument 403 /errors/
+#ErrorDocument 404 /errors/
+#ErrorDocument 500 /errors/
+
+
+#MENU
+
+RewriteRule "^login(.*)$" "index.php"
+RewriteRule "^sign-up(.*)$" "sign-up.php"
+RewriteRule "^forgot-password(.*)$" "forgot-password.php"
+RewriteRule "^reset-password(.*)$" "reset-password.php"
+RewriteRule "^dashboard(.*)$" "dashboard.php"
+RewriteRule "^tickets(.*)$" "tickets.php"
+RewriteRule "^ticket-detail(.*)$" "ticket-detail.php"
+RewriteRule "^fast-view(.*)$" "fast-view.php"
+RewriteRule "^projects(.*)$" "projects.php"
+RewriteRule "^categories(.*)$" "categories.php"
+RewriteRule "^reports(.*)$" "reports.php"
+RewriteRule "^users(.*)$" "users.php"
+RewriteRule "^profile(.*)$" "profile.php"
+RewriteRule "^cfdi-uuid-cancel-xml(.*)$" "cfdi-uuid-cancel-xml.php"
+RewriteRule "^remote-assistance(.*)$" "support.php"
+RewriteRule "faqs(.*)$" "faqs.php"
+RewriteRule "^system-configuration(.*)$" "system-configuration.php"
+RewriteRule "^configuration(.*)$" "custom.php"
+RewriteRule "^modules(.*)$" "modules.php"
+RewriteRule "^fade-detail(.*)$" "fade-detail.php"
+RewriteRule "installations(.*)$" "installations.php"
+RewriteRule "notices(.*)$" "notices.php"
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Configure el paquete “ea-php71” como el lenguaje de programación predeterminado “PHP”.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php71 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
