@@ -1,0 +1,10 @@
+
+# /
+/*.tgz
+
+# Files
+composer.lock
+log
+public
+config
+.idea
