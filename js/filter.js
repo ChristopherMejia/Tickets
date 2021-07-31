@@ -1,3 +1,5 @@
+const divTable = document.getElementById('resultados_filter');
+divTable.style.display = 'none'; //Ocultamos la tabla del filtro
 const searchQuery = []; //Array
 
 const addFilter = () => {
@@ -132,46 +134,30 @@ const btnRemove = (filter) => {
 const aplicar = (userID) =>{
     console.log(userID);
     const data = JSON.stringify(searchQuery);
-    $("#tablaPrincipal").css('display','none');
-    
     const xmlHttpReq = initAjaxRequest();
+
 	xmlHttpReq.onreadystatechange = responseData;
 	xmlHttpReq.open('POST', 'ajax/filter.php', false);
 	xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xmlHttpReq.send('data=' + data + '&id=' + userID + '&action=' + true );
+	xmlHttpReq.send('data=' + data + '&id=' + userID);
 
 	function responseData() {
 		if (self.xmlHttpReq.readyState === self.xmlHttpReq.DONE) {
 			if (self.xmlHttpReq.status === 200) {
+                // const obj = self.xmlHttpReq.responseText;
                 console.log(self.xmlHttpReq.responseText);
-                // const obj = JSON.parse(self.xmlHttpReq.responseText);
-                // console.log(obj);
-                var dataSet = [
-                    [ "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800", "hsd", "asdf", "sadf", "asdf" ]
-                ];
-                $(document).ready(function(){
-                    $('#example').DataTable({
-                        data: dataSet,
-                        columns: [
-                            { title: "#" },
-                            { title: "Titulo" },
-                            { title: "Prioridad" },
-                            { title: "Empresa." },
-                            { title: "Creado Por" },
-                            { title: "Asignado A" },
-                            { title: "Estatus" },
-                            { title: "Modulo" },
-                            { title: "Creado" },
-                            { title: "Ultima Actualización"}
-                        ]
-                    });
-                });
-                
+                $("#tablaPrincipal").css('display','none'); //ocultamos la tabla principal.
+                divTable.style.display = 'block'; //mostramos la tabla del filtro
+
+                $("#resultados_filter").html(self.xmlHttpReq.responseText);
+                // load(1);
+
 			} else {
 				alert('Hubo un problema al obtener el registro.');
 			}
 		}
 	}
+
 }
 
 const deleteOption = (selected, input) => {

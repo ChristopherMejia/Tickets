@@ -117,6 +117,10 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                         <div id="resultados"></div><!-- Carga los datos ajax -->
                                         <div class='outer_div'></div><!-- Carga los datos ajax -->
                                         <!-- /ajax -->
+                                        <div id="resultados_filter">
+                                            <?php include 'filter.php' ?>
+                                        </div>
+                                    <!-- table with js -->
                                     </div>
                                 </div>
                             </div>
@@ -369,9 +373,7 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                         <div class='outer_div_t'></div><!-- Carga los datos ajax -->
                                         <!-- /ajax -->
                                         <!-- table with js -->
-                                        <table id="example" class="display" width="100%"></table>
                                     </div>
-                                    <!-- table with js -->
                                 </div>
                             </div>
                         </div>

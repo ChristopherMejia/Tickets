@@ -137,7 +137,7 @@ if ($action == 'ajax' ) {
     $reload = './expences.php';
     //main query to fetch the data
     $sql = "SELECT DISTINCT t.order_number, t.title, t.priority_id, t.status_id, t.user_id, td.module_id, t.asigned_id, t.created_at, t.updated_at FROM  $sTable $sWhere LIMIT $offset,$per_page";
-    // var_dump($sql);
+    //var_dump($sql);
     $query = mysqli_query($con, $sql); //VAlidamos para verificar cual query usar
     if ($numrows > 0 ) {
         ?>
