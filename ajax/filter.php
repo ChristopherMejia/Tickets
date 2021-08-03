@@ -6,6 +6,7 @@ if($_POST['data'] != null){
     $json = array();
     $array=json_decode($_POST['data']);
     $idUser=json_decode($_POST['id']);
+    
 
     foreach($array as $value){
         $aux = array(
@@ -14,8 +15,18 @@ if($_POST['data'] != null){
         );
         array_push($datos, $aux);
     }
-    //concatenamos el usuario loggeado
-    $condicion = "WHERE tickets.asigned_id = ". $idUser ." ";
+    switch($_POST['flag']){
+        case "ticket":
+            $condicion = "WHERE tickets.asigned_id = ". $idUser ." ";
+            break;
+        case "pending":
+            $condicion = "WHERE tickets.asigned_id = ". 0 ." " ;
+            break;
+        case "testing":
+            $condicion = "WHERE tickets.status_id = ". 5 ." " ;
+            break;
+    }
+    
     //Contacetamos las condiciones de los filtros agregados
     foreach($datos as $dato){
         switch($dato["columna"]){
@@ -30,10 +41,10 @@ if($_POST['data'] != null){
                 $condicion .= "AND companies.name LIKE '%" .$dato["valor"]. "%' ";
                 break;
             case "Creado":
-                $condicion .= "AND users.name LIKE '" .$dato["valor"]. "' ";
+                $condicion .= "AND users.name LIKE '%" .$dato["valor"]. "%' ";
                 break;
             case "Estatus":
-                $condicion .= "AND status.name LIKE '" .$dato["valor"]. "' ";
+                $condicion .= "AND status.name LIKE '%" .$dato["valor"]. "%' ";
         }
     }
                     
@@ -65,7 +76,7 @@ if($_POST['data'] != null){
     LEFT JOIN tickets_detail ON tickets_detail.ticket_id = tickets.id
     ";
     $queryFull = $query . $condicion; // string with the query
-    // var_dump($queryFull);
+    //var_dump($queryFull);
     $queryResponse = mysqli_query($con, $queryFull); //execute query
     while($row = mysqli_fetch_array($queryResponse) ){
     // var_dump($row);
@@ -89,11 +100,8 @@ if($_POST['data'] != null){
     );
     array_push($json, $array);
     }
-    // echo json_encode($json);
-    // exit();
 }
-// $dataFilter=$_GET['objects'];
-var_dump($json);
+// var_dump($json);
 ?>
 <div class="panel-body no-padding" id="tablaFilter">
     <div class="table-responsive">
@@ -102,12 +110,12 @@ var_dump($json);
             <tr class="headings">
                 <th>#</th>
                 <th class="column-title">Titulo</th>
-                <th class="column-title">Prioridad</th>
+                <th class="column-title action-hidden">Prioridad</th>
                 <th class="column-title">Empresa</th>
                 <th class="column-title">Creado por</th>
-                <th class="column-title">Asignado a</th>
-                <th class="column-title">Estatus</th>
-                <th class="column-title">Modulo</th>
+                <th class="column-title action-hidden">Asignado a</th>
+                <th class="column-title action-hidden">Estatus</th>
+                <th class="column-title action-hidden">Modulo</th>
                 <th>Creado</th>
                 <th>Última Actualización</th>
                 <th class="column-title no-link last"><span class="nobr"></span></th>
@@ -120,7 +128,7 @@ var_dump($json);
                     
                         <td> <?php echo $column['titulo'] ?> </td>
                    
-                        <td> <?php echo $column['namePrioridad'] ?> </td>
+                        <td class="action-hidden"> <?php echo $column['namePrioridad'] ?> </td>
                    
                         <td> 
                             <div class="mini-logo"
@@ -137,7 +145,7 @@ var_dump($json);
                             ?> 
                         </td>
                    
-                        <td> 
+                        <td class="action-hidden"> 
                             <?php
                             $sqlAsi = mysqli_query($con, "SELECT * FROM users WHERE id='" .$column['asignado']. "' ");
                             $rowAsi = mysqli_fetch_array($sqlAsi); 
@@ -149,7 +157,7 @@ var_dump($json);
                             ?> 
                         </td>
                     
-                        <td> 
+                        <td class="action-hidden"> 
                             <span class="lb-custom label label-<?php echo $column['statusBadge']; ?>"><?php echo $column['statusName']; ?></span>
                         </td>
                         

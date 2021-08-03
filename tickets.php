@@ -58,11 +58,12 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                         <div class="form-group">
                                             <label for="filets">Buscar por:</label>
                                             <select class="form-control filter-sel" id="search_for">
-                                                <option selected disabled value="">Selecciona una opción</option>
+                                                <option selected disabled value="">Selecciona las opciónes</option>
                                                 <option value="Titulo">Titulo</option>
                                                 <option value="Prioridad">Prioridad</option>
                                                 <option value="Empresa">Empresa</option>
                                                 <option value="Creado">Creado por</option>
+                                                <option value="Asignado">Asignado a</option>
                                                 <option class="action-hidden dev" value="Estatus">Estatus</option>
                                             </select>
                                         </div>
@@ -147,26 +148,29 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                 </div>
 
                                 <div class="x_content filters">
-                                    <form class="form-inline">
+                                    <form class="form-inline" onsubmit="event.preventDefault();">
                                         <div class="form-group">
                                             <label for="filets">Buscar por:</label>
                                             <select class="form-control filter-sel" id="search_for_pending">
-                                                <option selected disabled value="">-- Selecciona --</option>
-                                                <option value="null">Ninguno</option>
+                                                <option selected disabled value="">Selecciona las opciones</option>
                                                 <option value="Titulo">Titulo</option>
                                                 <option class="action-hidden" value="Prioridad">Prioridad</option>
                                                 <option value="Empresa">Empresa</option>
                                                 <option value="Creado">Creado por</option>
-                                                <!--                                                <option class="action-hidden" value="Asignado">Asignado a</option>-->
                                                 <option class="action-hidden" value="Estatus">Estatus</option>
 
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="search_word_pending"
-                                                   placeholder="..."
-                                                   onkeyup='load_pending(1);'>
+                                            <input type="text" class="form-control" id="search_word_pending" placeholder="...">
+                                            <button type="button" title="Agregar Filtro" class="btn btn-link" id="cofirmPending" onclick="addFilterPending()">
+                                                <i class="fa fa-plus" aria-hidden="true"></i> 
+                                            </button>
                                         </div>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary" onclick="aplicarPending(<?php echo $user_id ?>)">Buscar</button>
+                                        </div>
+                                        
                                         <div class="form-group">
                                             <span class="action-hidden">Asignado a:</span>
                                             <select class="form-control filter-sel action-hidden"
@@ -196,6 +200,8 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                             <option value="100">100</option>
                                             <option value="500">500</option>
                                         </select>
+
+                                        <div class="input-group-prepend" style="margin-top: 1%; display: flex;" id="filter"></div>
                                     </form>
                                 </div>
 
@@ -203,8 +209,12 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                     <div class="table-responsive">
                                         <!-- ajax -->
                                         <div id="resultados_m"></div><!-- Carga los datos ajax -->
-                                        <div class='outer_div_m'></div><!-- Carga los datos ajax -->
+                                        <div class='outer_div_m' id="table_pending"></div><!-- Carga los datos ajax -->
                                         <!-- /ajax -->
+                                        <div id="resultados_filter_pending">
+                                            <?php include 'filter.php' ?>
+                                        </div>
+                                        <!-- table with js -->
                                     </div>
                                 </div>
                             </div>
@@ -234,21 +244,24 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                         <div class="form-group">
                                             <label for="filets">Buscar por:</label>
                                             <select class="form-control filter-sel" id="search_for_all">
-                                                <option selected disabled value="">-- Selecciona --</option>
-                                                <option value="null">Ninguno</option>
+                                                <option selected disabled value="">Selecciona las opciónes</option>
                                                 <option value="Titulo">Titulo</option>
                                                 <option class="action-hidden" value="Prioridad">Prioridad</option>
                                                 <option value="Empresa">Empresa</option>
                                                 <option value="Creado">Creado por</option>
-                                                <!--                                                <option class="action-hidden" value="Asignado">Asignado a</option>-->
+                                                <option class="action-hidden" value="Asignado">Asignado a</option>
                                                 <option class="action-hidden" value="Estatus">Estatus</option>
 
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="search_word_all"
-                                                   placeholder="..."
-                                                   onkeyup='load_all(1);'>
+                                            <input type="text" class="form-control" id="search_word_all" placeholder="...">
+                                            <button type="button" title="Agregar Filtro" class="btn btn-link" id="cofirmAll" onclick="addFilterAll()">
+                                                <i class="fa fa-plus" aria-hidden="true"></i> 
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary" onclick="aplicarAll(<?php echo $user_id ?>)">Buscar</button>
                                         </div>
                                         <div class="form-group">
                                             <span class="action-hidden">Asignado a:</span>
@@ -279,6 +292,8 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                             <option value="100">100</option>
                                             <option value="500">500</option>
                                         </select>
+                                        <div class="input-group-prepend" style="margin-top: 1%; display: flex;" id="filterAll"></div>
+
                                     </form>
                                 </div>
 
@@ -286,8 +301,11 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                     <div class="table-responsive">
                                         <!-- ajax -->
                                         <div id="resultados_a"></div><!-- Carga los datos ajax -->
-                                        <div class='outer_div_a'></div><!-- Carga los datos ajax -->
+                                        <div class='outer_div_a' id="table_All"></div><!-- Carga los datos ajax -->
                                         <!-- /ajax -->
+                                        <div id="resultados_filter_all">
+                                            <?php include 'filter.php' ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -318,21 +336,24 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                         <div class="form-group">
                                             <label for="filets">Buscar por:</label>
                                             <select class="form-control filter-sel" id="search_for_testing">
-                                                <option selected disabled value="">-- Selecciona --</option>
-                                                <option value="null">Ninguno</option>
+                                                <option selected disabled value="">Seleeciona las opciónes</option>
                                                 <option value="Titulo">Titulo</option>
                                                 <option class="action-hidden" value="Prioridad">Prioridad</option>
                                                 <option value="Empresa">Empresa</option>
                                                 <option value="Creado">Creado por</option>
-                                                <!--                                                <option class="action-hidden" value="Asignado">Asignado a</option>-->
-                                                <option class="action-hidden" value="Estatus">Estatus</option>
+                                                <option class="action-hidden" value="Asignado">Asignado a</option>
+                                                <!-- <option class="action-hidden" value="Estatus">Estatus</option> -->
 
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="search_word_testing"
-                                                   placeholder="..."
-                                                   onkeyup='load_testing(1);'>
+                                            <input type="text" class="form-control" id="search_word_testing" placeholder="...">
+                                            <button type="button" title="Agregar Filtro" class="btn btn-link" id="cofirmTesting" onclick="addFilterTesting()">
+                                                <i class="fa fa-plus" aria-hidden="true"></i> 
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary" onclick="aplicarTesting(<?php echo $user_id ?>)">Buscar</button>
                                         </div>
                                         <div class="form-group">
                                             <span class="action-hidden">Asignado a:</span>
@@ -363,6 +384,9 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                             <option value="100">100</option>
                                             <option value="500">500</option>
                                         </select>
+
+                                        <div class="input-group-prepend" style="margin-top: 1%; display: flex;" id="filterTesting"></div>
+
                                     </form>
                                 </div>
 
@@ -370,8 +394,11 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                     <div class="table-responsive" id="tableResponse">
                                         <!-- ajax -->
                                         <div id="resultados_t"></div><!-- Carga los datos ajax -->
-                                        <div class='outer_div_t'></div><!-- Carga los datos ajax -->
+                                        <div class='outer_div_t' id="table_testing"></div><!-- Carga los datos ajax -->
                                         <!-- /ajax -->
+                                        <div id="resultados_filter_testing">
+                                            <?php include 'filter.php' ?>
+                                        </div>
                                         <!-- table with js -->
                                     </div>
                                 </div>
