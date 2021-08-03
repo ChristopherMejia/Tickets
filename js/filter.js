@@ -1,5 +1,21 @@
-const searchQuery = []; //Array
+const divTable = document.getElementById('resultados_filter');//tabla de filtro de tickets
+const divTablePending = document.getElementById('resultados_filter_pending'); //tabla de filtro de resultados de tickets sin asignar
+const divTableTesting = document.getElementById('resultados_filter_testing');
+const divTableAll = document.getElementById('resultados_filter_all');
+const tablePending = document.getElementById('table_pending');
+const tableTesting = document.getElementById('table_testing');
+const tableAll = document.getElementById('table_All');
 
+divTableTesting.style.display = 'none';
+divTablePending.style.display = 'none';//Ocultamos la tabla de filtro sin asignar
+divTable.style.display = 'none'; //Ocultamos la tabla del filtro
+
+const searchQuery = []; //Array
+const searchQueryPending = []; // Array to pending tickets
+const searchQueryTesting = []; // Array to testing tickets
+const searchQueryAll = []; //Array to all tickets
+
+// Filter tickets
 const addFilter = () => {
     
     const filter = document.getElementById('search_for');
@@ -125,6 +141,8 @@ const btnRemove = (filter) => {
     removeAllChildNodes(divRemove); //remove the child elements
     if(searchQuery == ''){
         $("#tablaPrincipal").css('display','block');
+        divTable.style.display = 'none';
+        
     }
 };
 
@@ -132,46 +150,30 @@ const btnRemove = (filter) => {
 const aplicar = (userID) =>{
     console.log(userID);
     const data = JSON.stringify(searchQuery);
-    $("#tablaPrincipal").css('display','none');
-    
     const xmlHttpReq = initAjaxRequest();
+    const value = "ticket";
 	xmlHttpReq.onreadystatechange = responseData;
 	xmlHttpReq.open('POST', 'ajax/filter.php', false);
 	xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xmlHttpReq.send('data=' + data + '&id=' + userID + '&action=' + true );
+	xmlHttpReq.send('data=' + data + '&id=' + userID + '&flag=' + value);
 
 	function responseData() {
 		if (self.xmlHttpReq.readyState === self.xmlHttpReq.DONE) {
 			if (self.xmlHttpReq.status === 200) {
+                // const obj = self.xmlHttpReq.responseText;
                 console.log(self.xmlHttpReq.responseText);
-                // const obj = JSON.parse(self.xmlHttpReq.responseText);
-                // console.log(obj);
-                var dataSet = [
-                    [ "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800", "hsd", "asdf", "sadf", "asdf" ]
-                ];
-                $(document).ready(function(){
-                    $('#example').DataTable({
-                        data: dataSet,
-                        columns: [
-                            { title: "#" },
-                            { title: "Titulo" },
-                            { title: "Prioridad" },
-                            { title: "Empresa." },
-                            { title: "Creado Por" },
-                            { title: "Asignado A" },
-                            { title: "Estatus" },
-                            { title: "Modulo" },
-                            { title: "Creado" },
-                            { title: "Ultima Actualización"}
-                        ]
-                    });
-                });
-                
+                $("#tablaPrincipal").css('display','none'); //ocultamos la tabla principal.
+                divTable.style.display = 'block'; //mostramos la tabla del filtro
+
+                $("#resultados_filter").html(self.xmlHttpReq.responseText);
+                // load(1);
+
 			} else {
 				alert('Hubo un problema al obtener el registro.');
 			}
 		}
 	}
+
 }
 
 const deleteOption = (selected, input) => {
@@ -198,4 +200,405 @@ const initAjaxRequest = () => {
 		self.xmlHttpReq = new ActiveXObject('Microsoft.XMLHTTP');
 		return self.xmlHttpReq;
 	}
+}
+
+
+////Filter tickets whitout asign////
+
+const addFilterPending = () => {
+    const element = document.getElementById('filter');
+    const searchPending = document.getElementById('search_for_pending');
+    const wordPending = document.getElementById('search_word_pending');
+    const selectValue = searchPending.options[searchPending.selectedIndex].value;
+    const wordValue = wordPending.value;
+
+    switch(selectValue){
+        case 'Titulo':
+            console.log('case 1');
+            searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(searchPending, wordPending); //remove the option select
+            const oneFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(oneFilter);
+            console.log(searchQueryPending);
+            break;
+
+        case 'Prioridad':
+            console.log('case 2');
+            searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(searchPending, wordPending); //remove the option select
+            const twoFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(twoFilter);
+            console.log(searchQueryPending);
+            break;
+
+        case 'Empresa':
+            console.log('case 3');
+            searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(searchPending, wordPending); //remove the option select
+            const threeFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(threeFilter);
+            console.log(searchQueryPending);
+            break;
+
+        case 'Creado':
+            console.log('case 4');
+            searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(searchPending, wordPending); //remove the option select
+            const fourFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(fourFilter);
+            console.log(searchQueryPending);
+            break;
+
+        case 'Estatus':
+            console.log('case 6');
+            searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(searchPending, wordPending); //remove the option select
+            const sixFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(sixFilter);
+            console.log(searchQueryPending);
+            break;
+
+        case 'Modulo':
+            console.log('case 7');
+            searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(searchPending, wordPending); //remove the option select
+            const sevenFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(sevenFilter);
+            console.log(searchQueryPending);
+            break;
+
+        default:
+            console.log(`El filtro ${selectValue} no existe.`);
+    }
+
+}
+
+const createElementPending = (filter, value) =>{
+    const btn = document.createElement('button');
+    const icon = document.createElement('i');
+    const newDiv = document.createElement('div');
+    let span = addSpanText(filter, value);
+
+    btn.setAttribute("class", "btn btn-link");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("onclick", `btnRemovePending("${filter}")`); //send the value
+    
+    icon.setAttribute("class", "fa fa-times");
+    icon.setAttribute("aria-hidden", "true");
+    newDiv.setAttribute("id", `divPending${filter}`); //Add id attribute to new div
+
+    btn.appendChild(icon);
+
+    newDiv.appendChild(btn); //add button element
+    newDiv.appendChild(span); //add span element
+    return newDiv;
+}
+
+const btnRemovePending = (filter) => {
+    console.log(filter);
+    const select = document.getElementById('search_for_pending');
+    const divRemove = document.getElementById(`divPending${filter}`);
+    
+    const opt = document.createElement('option');
+    opt.value = filter;
+	opt.innerHTML = filter;
+    select.appendChild(opt);
+
+    //remove from arrayQuery
+    for(let i = 0; i < searchQueryPending.length; i++){
+        let obj = searchQueryPending[i];
+        if(filter == obj.campo){
+            searchQueryPending.splice(i, 1);
+        }
+    }
+    function removeAllChildNodes(parent) {
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+    }
+    
+    removeAllChildNodes(divRemove); //remove the child elements
+    
+    if(searchQueryPending == ''){
+        tablePending.style.display = 'block';
+        divTablePending.style.display = 'none';
+    }
+};
+
+const aplicarPending = (userID) =>{
+
+    console.log(userID, searchQueryPending);
+    const data = JSON.stringify(searchQueryPending);
+    const xmlHttpReq = initAjaxRequest();
+    const value = "pending";
+    xmlHttpReq.onreadystatechange = responseDataPending;
+	xmlHttpReq.open('POST', 'ajax/filter.php', false);
+	xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xmlHttpReq.send('data=' + data + '&id=' + userID + '&flag=' + value);
+    function responseDataPending() {
+		if (self.xmlHttpReq.readyState === self.xmlHttpReq.DONE) {
+			if (self.xmlHttpReq.status === 200) {
+                // const obj = self.xmlHttpReq.responseText;
+                console.log(self.xmlHttpReq.responseText);
+                tablePending.style.display = 'none';
+                divTablePending.style.display = 'block';
+                $("#resultados_filter_pending").html(self.xmlHttpReq.responseText);
+                // load(1);
+
+			} else {
+				alert('Hubo un problema al obtener el registro.');
+			}
+		}
+	}
+}
+
+////Filter Testing Tickets
+
+const addFilterTesting = () =>{
+    const selectTesting = document.getElementById('search_for_testing');
+    const wordTesting = document.getElementById('search_word_testing');
+    const selectValue = selectTesting.options[selectTesting.selectedIndex].value;
+    const wordValue = wordTesting.value;
+    const element = document.getElementById('filterTesting');
+    switch(selectValue){
+        case 'Titulo':
+            console.log('case 1');
+            searchQueryTesting.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const oneFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(oneFilter);
+            console.log(searchQueryTesting);
+            break;
+
+        case 'Prioridad':
+            console.log('case 2');
+            searchQueryTesting.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const twoFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(twoFilter);
+            console.log(searchQueryTesting);
+        
+            break;
+
+        case 'Empresa':
+            console.log('case 3');
+            searchQueryTesting.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const threeFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(threeFilter);
+            console.log(searchQueryTesting);
+            break;
+
+        case 'Creado':
+            console.log('case 4');
+            searchQueryTesting.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const fourFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(fourFilter);
+            console.log(searchQueryTesting);
+            break;
+
+        case 'Asignado':
+            searchQueryTesting.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const fiveFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(fiveFilter);
+            console.log(searchQueryTesting);
+            break;
+
+        default:
+            console.log(`El filtro ${selectValue} no existe.`);
+    }
+}
+
+const createElementTesting = (filter, value) =>{
+    const btn = document.createElement('button');
+    const icon = document.createElement('i');
+    const newDiv = document.createElement('div');
+    let span = addSpanText(filter, value);
+
+    btn.setAttribute("class", "btn btn-link");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("onclick", `btnRemoveTesting("${filter}")`); //send the value
+    
+    icon.setAttribute("class", "fa fa-times");
+    icon.setAttribute("aria-hidden", "true");
+    newDiv.setAttribute("id", `divTesting${filter}`); //Add id attribute to new div
+
+    btn.appendChild(icon);
+
+    newDiv.appendChild(btn); //add button element
+    newDiv.appendChild(span); //add span element
+    return newDiv;
+}
+
+const btnRemoveTesting = (filter) => {
+    console.log(filter);
+    const select = document.getElementById('search_for_testing');
+    const divRemove = document.getElementById(`divTesting${filter}`);
+    
+    const opt = document.createElement('option');
+    opt.value = filter;
+	opt.innerHTML = filter;
+    select.appendChild(opt);
+
+    //remove from arrayQuery
+    for(let i = 0; i < searchQueryTesting.length; i++){
+        let obj = searchQueryTesting[i];
+        if(filter == obj.campo){
+            searchQueryTesting.splice(i, 1);
+        }
+    }
+    function removeAllChildNodes(parent) {
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+    }
+    
+    removeAllChildNodes(divRemove); //remove the child elements
+    
+    if(searchQueryTesting == ''){
+        tableTesting.style.display = 'block';
+        divTableTesting.style.display = 'none';
+    }
+}
+
+const aplicarTesting = (userID) =>{
+    console.log(userID, searchQueryTesting);
+    const data = JSON.stringify(searchQueryTesting);
+    const xmlHttpReq = initAjaxRequest();
+    const value ="testing";
+    xmlHttpReq.onreadystatechange = responseDataPending;
+	xmlHttpReq.open('POST', 'ajax/filter.php', false);
+	xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xmlHttpReq.send('data=' + data + '&id=' + userID + '&flag=' + value);
+    function responseDataPending() {
+		if (self.xmlHttpReq.readyState === self.xmlHttpReq.DONE) {
+			if (self.xmlHttpReq.status === 200) {
+                // const obj = self.xmlHttpReq.responseText;
+                console.log(self.xmlHttpReq.responseText);
+                tableTesting.style.display = 'none';
+                divTableTesting.style.display = 'block';
+                $("#resultados_filter_testing").html(self.xmlHttpReq.responseText);
+                // load(1);
+
+			} else {
+				alert('Hubo un problema al obtener el registro.');
+			}
+		}
+	}
+}
+
+///Filter All Tickets
+const addFilterAll = () =>{
+    const selectTesting = document.getElementById('search_for_all');
+    const wordTesting = document.getElementById('search_word_all');
+    const selectValue = selectTesting.options[selectTesting.selectedIndex].value;
+    const wordValue = wordTesting.value;
+    const element = document.getElementById('filterAll');
+    switch(selectValue){
+        case 'Titulo':
+            console.log('case 1');
+            searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const oneFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(oneFilter);
+            console.log(searchQueryAll);
+            break;
+
+        case 'Prioridad':
+            console.log('case 2');
+            searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const twoFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(twoFilter);
+            console.log(searchQueryAll);
+        
+            break;
+
+        case 'Empresa':
+            console.log('case 3');
+            searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const threeFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(threeFilter);
+            console.log(searchQueryAll);
+            break;
+
+        case 'Creado':
+            console.log('case 4');
+            searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const fourFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(fourFilter);
+            console.log(searchQueryAll);
+            break;
+
+        case 'Asignado':
+            searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const fiveFilter = createElementTesting(selectValue, wordValue)
+            element.appendChild(fiveFilter);
+            console.log(searchQueryAll);
+            break;
+
+        default:
+            console.log(`El filtro ${selectValue} no existe.`);
+    }
+}
+
+const createElementAll = (filter, value) => {
+    const btn = document.createElement('button');
+    const icon = document.createElement('i');
+    const newDiv = document.createElement('div');
+    let span = addSpanText(filter, value);
+
+    btn.setAttribute("class", "btn btn-link");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("onclick", `btnRemoveAll("${filter}")`); //send the value
+    
+    icon.setAttribute("class", "fa fa-times");
+    icon.setAttribute("aria-hidden", "true");
+    newDiv.setAttribute("id", `divAll${filter}`); //Add id attribute to new div
+
+    btn.appendChild(icon);
+
+    newDiv.appendChild(btn); //add button element
+    newDiv.appendChild(span); //add span element
+    return newDiv;
+}
+
+const btnRemoveAll = (filter) => {
+    console.log(filter);
+    const select = document.getElementById('search_for_all');
+    const divRemove = document.getElementById(`divAll${filter}`);
+    
+    const opt = document.createElement('option');
+    opt.value = filter;
+	opt.innerHTML = filter;
+    select.appendChild(opt);
+
+    //remove from arrayQuery
+    for(let i = 0; i < searchQueryAll.length; i++){
+        let obj = searchQueryAll[i];
+        if(filter == obj.campo){
+            searchQueryAll.splice(i, 1);
+        }
+    }
+    function removeAllChildNodes(parent) {
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+    }
+    
+    removeAllChildNodes(divRemove); //remove the child elements
+    
+    if(searchQueryTesting == ''){
+        tableAll.style.display = 'block';
+        divTableAll.style.display = 'none';
+    }
+}
+
+const aplicarAll = () => {
+
 }

@@ -12369,3 +12369,28 @@ Solicito de su ayuda ya que tengo problemas al momento d' at line 1 - Array
     [0] => Usuario:chrism
 )
  
+02-08-2021 05:16:01 - C:\xampp\htdocs\soporte\action - LOGIN -  Contrasena y / o usuario invalido - Array
+(
+    [0] => Usuario:root
+)
+ 
+02-08-2021 05:16:09 - C:\xampp\htdocs\soporte\action - LOGIN -  Contrasena y / o usuario invalido - Array
+(
+    [0] => Usuario:root
+)
+ 
+02-08-2021 07:32:37 - C:\xampp\htdocs\soporte\action - TICKET -  Hubo un problema con la insercción del detalle:  - Array
+(
+    [0] => Ticket ID:
+)
+ 
+02-08-2021 08:23:54 - C:\xampp\htdocs\soporte\action - TICKET -  Hubo un problema con la insercción del detalle:  - Array
+(
+    [0] => Ticket ID:
+)
+ 
+02-08-2021 08:46:57 - C:\xampp\htdocs\soporte\action - TICKET -  Hubo un problema con la insercción del detalle:  - Array
+(
+    [0] => Ticket ID:
+)
+ 
