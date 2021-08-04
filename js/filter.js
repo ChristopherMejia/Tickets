@@ -58,7 +58,7 @@ const addFilter = () => {
             element.appendChild(fourFilter);
             break;
 
-        case 'Asignado a':
+        case 'Asignado':
             console.log('case 5');
             searchQuery.push(addOptionSelected(filterValue, wordValue)); //Hacer la prueba
             deleteOption(filter, word); //remove the option select
@@ -249,6 +249,16 @@ const addFilterPending = () => {
             console.log(searchQueryPending);
             break;
 
+        case 'Asignado':
+            console.log('case 5');
+            searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //Hacer la prueba
+            deleteOption(searchPending, wordPending); //remove the option select
+            const fiveFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(fiveFilter);
+            console.log(searchQueryPending);
+
+            break;
+
         case 'Estatus':
             console.log('case 6');
             searchQueryPending.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
@@ -405,6 +415,15 @@ const addFilterTesting = () =>{
             element.appendChild(fiveFilter);
             console.log(searchQueryTesting);
             break;
+        
+        case 'Modulo':
+            console.log('case 7');
+            searchQueryTesting.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const sevenFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(sevenFilter);
+            console.log(searchQueryTesting);
+            break;
 
         default:
             console.log(`El filtro ${selectValue} no existe.`);
@@ -468,11 +487,11 @@ const aplicarTesting = (userID) =>{
     const data = JSON.stringify(searchQueryTesting);
     const xmlHttpReq = initAjaxRequest();
     const value ="testing";
-    xmlHttpReq.onreadystatechange = responseDataPending;
+    xmlHttpReq.onreadystatechange = responseDataTesting;
 	xmlHttpReq.open('POST', 'ajax/filter.php', false);
 	xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xmlHttpReq.send('data=' + data + '&id=' + userID + '&flag=' + value);
-    function responseDataPending() {
+    function responseDataTesting() {
 		if (self.xmlHttpReq.readyState === self.xmlHttpReq.DONE) {
 			if (self.xmlHttpReq.status === 200) {
                 // const obj = self.xmlHttpReq.responseText;
@@ -541,6 +560,15 @@ const addFilterAll = () =>{
             element.appendChild(fiveFilter);
             console.log(searchQueryAll);
             break;
+        
+        case 'Modulo':
+            console.log('case 7');
+            searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectTesting, wordTesting); //remove the option select
+            const sevenFilter = createElementPending(selectValue, wordValue)
+            element.appendChild(sevenFilter);
+            console.log(searchQueryAll);
+            break;
 
         default:
             console.log(`El filtro ${selectValue} no existe.`);
@@ -599,6 +627,31 @@ const btnRemoveAll = (filter) => {
     }
 }
 
-const aplicarAll = () => {
+const aplicarAll = (userID) => {
+    console.log(userID, searchQueryAll);
 
+    const data = JSON.stringify(searchQueryAll);
+    const xmlHttpReq = initAjaxRequest();
+    const value ="all";
+
+    xmlHttpReq.onreadystatechange = responseDataAll;
+	xmlHttpReq.open('POST', 'ajax/filter.php', false);
+	xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xmlHttpReq.send('data=' + data + '&id=' + userID + '&flag=' + value);
+
+    function responseDataAll() {
+		if (self.xmlHttpReq.readyState === self.xmlHttpReq.DONE) {
+			if (self.xmlHttpReq.status === 200) {
+                // const obj = self.xmlHttpReq.responseText;
+                console.log(self.xmlHttpReq.responseText);
+                tableAll.style.display = 'none';
+                divTableAll.style.display = 'block';
+                $("#resultados_filter_all").html(self.xmlHttpReq.responseText);
+                // load(1);
+
+			} else {
+				alert('Hubo un problema al obtener el registro.');
+			}
+		}
+	}
 }
