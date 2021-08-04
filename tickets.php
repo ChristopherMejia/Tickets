@@ -63,7 +63,7 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                                 <option value="Prioridad">Prioridad</option>
                                                 <option value="Empresa">Empresa</option>
                                                 <option value="Creado">Creado por</option>
-                                                <option value="Asignado">Asignado a</option>
+                                                <!-- <option value="Asignado">Asignado a</option> -->
                                                 <option value="Modulo">Modulo</option>
                                                 <option class="action-hidden dev" value="Estatus">Estatus</option>
                                             </select>
@@ -159,7 +159,7 @@ $modules = mysqli_query($con, "SELECT * FROM modules ");
                                                 <option value="Empresa">Empresa</option>
                                                 <option value="Creado">Creado por</option>
                                                 <option value="Modulo">Modulo</option>
-                                                <option class="action-hidden" value="Estatus">Estatus</option>
+                                                <!-- <option class="action-hidden" value="Estatus">Estatus</option> -->
 
                                             </select>
                                         </div>

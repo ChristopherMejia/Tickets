@@ -510,17 +510,17 @@ const aplicarTesting = (userID) =>{
 
 ///Filter All Tickets
 const addFilterAll = () =>{
-    const selectTesting = document.getElementById('search_for_all');
-    const wordTesting = document.getElementById('search_word_all');
-    const selectValue = selectTesting.options[selectTesting.selectedIndex].value;
-    const wordValue = wordTesting.value;
+    const selectAll = document.getElementById('search_for_all');
+    const wordAll = document.getElementById('search_word_all');
+    const selectValue = selectAll.options[selectAll.selectedIndex].value;
+    const wordValue = wordAll.value;
     const element = document.getElementById('filterAll');
     switch(selectValue){
         case 'Titulo':
             console.log('case 1');
             searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
-            deleteOption(selectTesting, wordTesting); //remove the option select
-            const oneFilter = createElementTesting(selectValue, wordValue)
+            deleteOption(selectAll, wordAll); //remove the option select
+            const oneFilter = createElementAll(selectValue, wordValue)
             element.appendChild(oneFilter);
             console.log(searchQueryAll);
             break;
@@ -528,8 +528,8 @@ const addFilterAll = () =>{
         case 'Prioridad':
             console.log('case 2');
             searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
-            deleteOption(selectTesting, wordTesting); //remove the option select
-            const twoFilter = createElementTesting(selectValue, wordValue)
+            deleteOption(selectAll, wordAll); //remove the option select
+            const twoFilter = createElementAll(selectValue, wordValue)
             element.appendChild(twoFilter);
             console.log(searchQueryAll);
         
@@ -538,8 +538,8 @@ const addFilterAll = () =>{
         case 'Empresa':
             console.log('case 3');
             searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
-            deleteOption(selectTesting, wordTesting); //remove the option select
-            const threeFilter = createElementTesting(selectValue, wordValue)
+            deleteOption(selectAll, wordAll); //remove the option select
+            const threeFilter = createElementAll(selectValue, wordValue)
             element.appendChild(threeFilter);
             console.log(searchQueryAll);
             break;
@@ -547,25 +547,35 @@ const addFilterAll = () =>{
         case 'Creado':
             console.log('case 4');
             searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
-            deleteOption(selectTesting, wordTesting); //remove the option select
-            const fourFilter = createElementTesting(selectValue, wordValue)
+            deleteOption(selectAll, wordAll); //remove the option select
+            const fourFilter = createElementAll(selectValue, wordValue)
             element.appendChild(fourFilter);
             console.log(searchQueryAll);
             break;
 
         case 'Asignado':
+            console.log('case 5');
             searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
-            deleteOption(selectTesting, wordTesting); //remove the option select
-            const fiveFilter = createElementTesting(selectValue, wordValue)
+            deleteOption(selectAll, wordAll); //remove the option select
+            const fiveFilter = createElementAll(selectValue, wordValue)
             element.appendChild(fiveFilter);
             console.log(searchQueryAll);
             break;
         
+        case 'Estatus':
+            console.log('case 6');
+            searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
+            deleteOption(selectAll, wordAll); //remove the option select
+            const sixFilter = createElementAll(selectValue, wordValue)
+            element.appendChild(sixFilter);
+            console.log(searchQueryAll);
+            break;
+
         case 'Modulo':
             console.log('case 7');
             searchQueryAll.push(addOptionSelected(selectValue, wordValue)); //agregar el obj a buscar
-            deleteOption(selectTesting, wordTesting); //remove the option select
-            const sevenFilter = createElementPending(selectValue, wordValue)
+            deleteOption(selectAll, wordAll); //remove the option select
+            const sevenFilter = createElementAll(selectValue, wordValue)
             element.appendChild(sevenFilter);
             console.log(searchQueryAll);
             break;

@@ -53,16 +53,19 @@ if($_POST['data'] != null){
             $condicion .= "AND status.name LIKE '%" .$dato["valor"]. "%' ";
             break;
         case "Modulo":
-            $condicion = " ";
+            $tableMod = true;
+            $condicion = "WHERE tickets.asigned_id = users.id AND modules.name LIKE '%" .$dato["valor"]. "%'";
             break;
         case "Asignado":
             $table = true;
-            $condicion = "WHERE tickets.asigned_id = users.id AND users.name LIKE '%" .$dato["valor"]. "%' ";
+            $condicion = "WHERE tickets.asigned_id = users.id AND users.name LIKE '%" .$dato["valor"]. "%'";
             break;
         }
     }
-        
-    
+    if(isset($tableMod) || isset($table)){
+        $condicion .= " ORDER BY tickets.order_number ASC";
+    }
+
     $query = "SELECT tickets.id as ticketId,
     tickets.order_number as order_number,
     tickets.title as title,
@@ -83,7 +86,7 @@ if($_POST['data'] != null){
     status.name as statusName,
     status.badge as statusBadge,
     tickets_detail.module_id as module_id 
-    FROM tickets 
+    FROM tickets
     LEFT JOIN priorities ON tickets.priority_id = priorities.id
     LEFT JOIN companies ON tickets.company_id = companies.id
     LEFT JOIN users ON tickets.user_id = users.id
@@ -111,6 +114,35 @@ if($_POST['data'] != null){
         users.name as userName
         FROM users
         LEFT JOIN tickets ON tickets.asigned_id = users.id
+        LEFT JOIN priorities ON tickets.priority_id = priorities.id
+        LEFT JOIN companies ON tickets.company_id = companies.id
+        LEFT JOIN status ON tickets.status_id = status.id
+        ";
+    }
+
+    if(isset($tableMod)){
+        $query = " SELECT
+        tickets.id as ticketId,
+        tickets.order_number as order_number,
+        tickets.title as title,
+        tickets.priority_id as priority_id,
+        tickets.company_id as company_id,
+        tickets.status_id as status_id,
+        tickets.user_id as user_id,
+        tickets.asigned_id as asigned_id,
+        tickets.created_at as created_at,
+        tickets.updated_at as updated_at,
+        priorities.name as priorityName,
+        companies.id as companyId,
+        status.id as statusId,
+        status.name as statusName,
+        status.badge as statusBadge,
+        users.id as usersId,
+        users.name as userName
+        FROM modules
+        LEFT JOIN tickets_detail ON tickets_detail.module_id = modules.id
+        LEFT JOIN tickets ON tickets.id = tickets_detail.ticket_id
+        LEFT JOIN users ON tickets.asigned_id = users.id
         LEFT JOIN priorities ON tickets.priority_id = priorities.id
         LEFT JOIN companies ON tickets.company_id = companies.id
         LEFT JOIN status ON tickets.status_id = status.id
