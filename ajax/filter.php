@@ -15,6 +15,7 @@ if($_POST['data'] != null){
         );
         array_push($datos, $aux);
     }
+
     switch($_POST['flag']){
         case "ticket":
             $condicion = "WHERE tickets.asigned_id = ". $idUser ." ";
@@ -25,29 +26,43 @@ if($_POST['data'] != null){
         case "testing":
             $condicion = "WHERE tickets.status_id = ". 5 ." " ;
             break;
+        case "all";
+            $condicion = "WHERE tickets.user_id ";
+            break;
     }
     
-    //Contacetamos las condiciones de los filtros agregados
+    
+
+        //Contacetamos las condiciones de los filtros agregados
     foreach($datos as $dato){
         switch($dato["columna"]){
-        
-            case "Prioridad":
-                $condicion .= "AND priorities.name LIKE '%".$dato["valor"]."%' "; 
-                break;
-            case "Titulo":
-                $condicion .= "AND tickets.title LIKE '%" .$dato["valor"]. "%' ";
-                break;
-            case "Empresa":
-                $condicion .= "AND companies.name LIKE '%" .$dato["valor"]. "%' ";
-                break;
-            case "Creado":
-                $condicion .= "AND users.name LIKE '%" .$dato["valor"]. "%' ";
-                break;
-            case "Estatus":
-                $condicion .= "AND status.name LIKE '%" .$dato["valor"]. "%' ";
+            
+        case "Prioridad":
+            $condicion .= "AND priorities.name LIKE '%".$dato["valor"]."%' "; 
+            break;
+        case "Titulo":
+            $condicion .= "AND tickets.title LIKE '%" .$dato["valor"]. "%' ";
+            break;
+        case "Empresa":
+            $condicion .= "AND companies.name LIKE '%" .$dato["valor"]. "%' ";
+            break;
+        case "Creado":
+            $condicion .= "AND users.name LIKE '%" .$dato["valor"]. "%' ";
+            break;
+        case "Estatus":
+            $condicion .= "AND status.name LIKE '%" .$dato["valor"]. "%' ";
+            break;
+        case "Modulo":
+            $condicion = " ";
+            break;
+        case "Asignado":
+            $table = true;
+            $condicion = "WHERE tickets.asigned_id = users.id AND users.name LIKE '%" .$dato["valor"]. "%' ";
+            break;
         }
     }
-                    
+        
+    
     $query = "SELECT tickets.id as ticketId,
     tickets.order_number as order_number,
     tickets.title as title,
@@ -68,15 +83,43 @@ if($_POST['data'] != null){
     status.name as statusName,
     status.badge as statusBadge,
     tickets_detail.module_id as module_id 
-    FROM tickets
+    FROM tickets 
     LEFT JOIN priorities ON tickets.priority_id = priorities.id
     LEFT JOIN companies ON tickets.company_id = companies.id
     LEFT JOIN users ON tickets.user_id = users.id
     LEFT JOIN status ON tickets.status_id = status.id
     LEFT JOIN tickets_detail ON tickets_detail.ticket_id = tickets.id
     ";
+
+    if(isset($table)){
+        $query ="SELECT tickets.id as ticketId,
+        tickets.order_number as order_number,
+        tickets.title as title,
+        tickets.priority_id as priority_id,
+        tickets.company_id as company_id,
+        tickets.status_id as status_id,
+        tickets.user_id as user_id,
+        tickets.asigned_id as asigned_id,
+        tickets.created_at as created_at,
+        tickets.updated_at as updated_at,
+        priorities.name as priorityName,
+        companies.id as companyId,
+        status.id as statusId,
+        status.name as statusName,
+        status.badge as statusBadge,
+        users.id as usersId,
+        users.name as userName
+        FROM users
+        LEFT JOIN tickets ON tickets.asigned_id = users.id
+        LEFT JOIN priorities ON tickets.priority_id = priorities.id
+        LEFT JOIN companies ON tickets.company_id = companies.id
+        LEFT JOIN status ON tickets.status_id = status.id
+        ";
+    }
+
     $queryFull = $query . $condicion; // string with the query
-    //var_dump($queryFull);
+    
+    // var_dump($queryFull);
     $queryResponse = mysqli_query($con, $queryFull); //execute query
     while($row = mysqli_fetch_array($queryResponse) ){
     // var_dump($row);
@@ -123,7 +166,7 @@ if($_POST['data'] != null){
             </thead>
             <tbody>
                 <?php foreach($json as $column){ ?>
-                    <tr> 
+                    <tr class="even pointer"> 
                         <td> <?php echo $column['orderNumber'] ?> </td>
                     
                         <td> <?php echo $column['titulo'] ?> </td>
