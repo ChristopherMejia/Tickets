@@ -62,9 +62,9 @@ if($_POST['data'] != null){
             break;
         }
     }
-    if(isset($tableMod) || isset($table)){
-        $condicion .= " ORDER BY tickets.order_number ASC";
-    }
+    //if(isset($tableMod) || isset($table)){
+        $condicion .= " ORDER BY tickets.order_number DESC";
+    //}
 
     $query = "SELECT tickets.id as ticketId,
     tickets.order_number as order_number,
@@ -151,7 +151,7 @@ if($_POST['data'] != null){
 
     $queryFull = $query . $condicion; // string with the query
     
-    // var_dump($queryFull);
+    var_dump($queryFull);
     $queryResponse = mysqli_query($con, $queryFull); //execute query
     while($row = mysqli_fetch_array($queryResponse) ){
     // var_dump($row);
