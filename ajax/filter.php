@@ -6,7 +6,7 @@ if($_POST['data'] != null){
     $json = array();
     $array=json_decode($_POST['data']);
     $idUser=json_decode($_POST['id']);
-    
+    $typeWindow = $_POST['flag'];
 
     foreach($array as $value){
         $aux = array(
@@ -54,17 +54,19 @@ if($_POST['data'] != null){
             break;
         case "Modulo":
             $tableMod = true;
-            $condicion = "WHERE tickets.asigned_id = users.id AND modules.name LIKE '%" .$dato["valor"]. "%'";
+            $condicion = "WHERE tickets.asigned_id = users.id AND modules.name LIKE '%".$dato["valor"]."%'";
             break;
         case "Asignado":
             $table = true;
-            $condicion = "WHERE tickets.asigned_id = users.id AND users.name LIKE '%" .$dato["valor"]. "%'";
+            ($typeWindow=="testing")? $condicion = "WHERE tickets.asigned_id = users.id   
+            AND status.id = '" . 5 ."'
+            AND users.name LIKE '%" .$dato["valor"]. "%'" : $condicion = "WHERE tickets.asigned_id = users.id AND users.name LIKE '%" .$dato["valor"]. "%'";
             break;
         }
     }
-    //if(isset($tableMod) || isset($table)){
-        $condicion .= " ORDER BY tickets.order_number DESC";
-    //}
+    
+    $condicion .= " ORDER BY tickets.order_number DESC";
+    
 
     $query = "SELECT tickets.id as ticketId,
     tickets.order_number as order_number,
@@ -151,7 +153,7 @@ if($_POST['data'] != null){
 
     $queryFull = $query . $condicion; // string with the query
     
-    var_dump($queryFull);
+    // var_dump($queryFull);
     $queryResponse = mysqli_query($con, $queryFull); //execute query
     while($row = mysqli_fetch_array($queryResponse) ){
     // var_dump($row);

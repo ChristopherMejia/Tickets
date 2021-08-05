@@ -136,8 +136,8 @@ const btnRemove = (filter) => {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
+        divRemove.remove(); //eliminamos le div del filter
     }
-    
     removeAllChildNodes(divRemove); //remove the child elements
     if(searchQuery == ''){
         $("#tablaPrincipal").css('display','block');
@@ -325,6 +325,7 @@ const btnRemovePending = (filter) => {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
+        divRemove.remove(); //Eliminamos el div del filter
     }
     
     removeAllChildNodes(divRemove); //remove the child elements
@@ -472,6 +473,8 @@ const btnRemoveTesting = (filter) => {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
+        divRemove.remove(); //Eliminamos el div del filter
+
     }
     
     removeAllChildNodes(divRemove); //remove the child elements
@@ -627,6 +630,8 @@ const btnRemoveAll = (filter) => {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
+        divRemove.remove(); //Eliminamos el div del filter
+
     }
     
     removeAllChildNodes(divRemove); //remove the child elements
